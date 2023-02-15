@@ -1,0 +1,31 @@
+name: solver-builds
+on:
+  push:
+    tags: ["v?[0-9]+"]
+    branches: [main, "release-**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-20.04, macos-11, macos-12, windows-2019]
+        solver: [z3-4.8.5, z3-4.12.1]
+    steps:
+      - name: Check out
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 0
+
+     - name: build
+       run: scripts/build.sh ${{ matrix.solver }}
+
+     - name: Upload artifact
+       uses: actions/upload-artifact@v2
+         with:
+           path: bin
+           name: ${{ matrix.os }}-${{ matrix.solver }}-bin

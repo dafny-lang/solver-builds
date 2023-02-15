@@ -1,0 +1,6 @@
+[submodule "repos/z3-4.8.5"]
+	path = repos/z3-4.8.5
+	url = https://github.com/z3prover/z3
+[submodule "repos/z3-4.12.1"]
+	path = repos/z3-4.12.1
+	url = https://github.com/z3prover/z3
