@@ -1,4 +1,5 @@
 name: solver-builds
+
 on:
   push:
     tags: ["v?[0-9]+"]
@@ -21,11 +22,11 @@ jobs:
           submodules: true
           fetch-depth: 0
 
-     - name: build
-       run: scripts/build.sh ${{ matrix.solver }}
+      - name: build
+        run: scripts/build.sh ${{ matrix.solver }}
 
-     - name: Upload artifact
-       uses: actions/upload-artifact@v2
-         with:
-           path: bin
-           name: ${{ matrix.os }}-${{ matrix.solver }}-bin
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          path: bin
+          name: ${{ matrix.os }}-${{ matrix.solver }}-bin
