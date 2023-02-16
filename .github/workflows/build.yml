@@ -22,7 +22,8 @@ jobs:
           submodules: true
           fetch-depth: 0
 
-      - name: build
+      - name: Build
+        shell: bash
         run: scripts/build.sh ${{ matrix.solver }}
 
       - name: Upload artifact
