@@ -22,9 +22,29 @@ jobs:
           submodules: true
           fetch-depth: 0
 
-      - name: Build
+      - name: Install dependencies (Windows)
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          msystem: MINGW64
+          install: |
+            make
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-ninja
+            python
+            tar
+        if: runner.os == 'Windows'
+
+      - name: Build (non-Windows)
         shell: bash
         run: scripts/build.sh ${{ matrix.solver }}
+        if: runner.os != 'Windows'
+
+      - name: Build (Windows)
+        shell: msys2 {0}
+        run: scripts/build.sh ${{ matrix.solver }}
+        if: runner.os == 'Windows'
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
