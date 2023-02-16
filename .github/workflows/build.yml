@@ -17,7 +17,7 @@ jobs:
         solver: [z3-4.8.5, z3-4.12.1]
     steps:
       - name: Check out
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: true
           fetch-depth: 0
@@ -47,7 +47,7 @@ jobs:
         if: runner.os == 'Windows'
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           path: bin
           name: ${{ matrix.solver }}-${{ matrix.os }}-bin
