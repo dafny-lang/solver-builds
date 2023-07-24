@@ -14,7 +14,15 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-22.04, ubuntu-20.04, macos-11, macos-12, windows-2019]
+        arch: [x64]
         solver: [z3-4.8.5, z3-4.12.1]
+        include:
+          - os: macos-11
+            arch: arm64
+            solver: z3-4.12.1
+          - os: macos-12
+            arch: arm64
+            solver: z3-4.12.1
     steps:
       - name: Check out
         uses: actions/checkout@v3
@@ -38,16 +46,16 @@ jobs:
 
       - name: Build (non-Windows)
         shell: bash
-        run: scripts/build.sh ${{ matrix.solver }}
+        run: scripts/build.sh ${{ matrix.solver }} ${{ matrix.arch }}
         if: runner.os != 'Windows'
 
       - name: Build (Windows)
         shell: msys2 {0}
-        run: scripts/build.sh ${{ matrix.solver }}
+        run: scripts/build.sh ${{ matrix.solver }} ${{ matrix.arch }}
         if: runner.os == 'Windows'
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           path: bin
-          name: ${{ matrix.solver }}-${{ matrix.os }}-bin
+          name: ${{ matrix.solver }}-${{ matrix.arch }}-${{ matrix.os }}-bin
