@@ -16,7 +16,7 @@ jobs:
         os: [ubuntu-22.04, ubuntu-20.04,
              macos-11, macos-12, macos-13,
              windows-2019, windows-2022]
-        solver: [z3-4.8.5, z3-4.12.1, z3-4.12.6]
+        solver: [z3-4.12.1, z3-4.12.6]
         arch: [x64]
         include:
           - os: macos-11
