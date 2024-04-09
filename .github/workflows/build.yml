@@ -13,9 +13,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, ubuntu-20.04, macos-11, macos-12, windows-2019]
+        os: [ubuntu-22.04, ubuntu-20.04,
+             windows-2019, windows-2022]
+        solver: [z3-4.8.5, z3-4.12.1, z3-4.12.6]
         arch: [x64]
-        solver: [z3-4.8.5, z3-4.12.1]
         include:
           - os: macos-11
             arch: arm64
@@ -23,6 +24,18 @@ jobs:
           - os: macos-12
             arch: arm64
             solver: z3-4.12.1
+          - os: macos-13
+            arch: arm64
+            solver: z3-4.12.1
+          - os: macos-11
+            arch: arm64
+            solver: z3-4.12.6
+          - os: macos-12
+            arch: arm64
+            solver: z3-4.12.6
+          - os: macos-13
+            arch: arm64
+            solver: z3-4.12.6
     steps:
       - name: Check out
         uses: actions/checkout@v3
