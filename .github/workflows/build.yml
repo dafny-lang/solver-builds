@@ -67,9 +67,9 @@ jobs:
             tar
         if: runner.os == 'Windows'
 
-      - name: Set CC (ubuntu-20.04)
+      - name: Set CXX (ubuntu-20.04)
         run: |
-          echo "CC=gcc-10" >> $GITHUB_ENV
+          echo "CXX=g++-10" >> $GITHUB_ENV
         if: matrix.os == 'ubuntu-20.04'
 
       - name: Build (non-Windows)
