@@ -67,6 +67,20 @@ jobs:
             tar
         if: runner.os == 'Windows'
 
+      - name: Install dependencies (ubuntu-20.04)
+        run: |
+          which g++
+          g++ -v
+          which g++-10
+          g++-10 -v
+          sudo apt-get update
+          sudo apt-get install -qq g++-10
+          which g++
+          g++ -v
+          which g++-10
+          g++-10 -v
+        if: matrix.os == 'ubuntu-20.04'
+
       - name: Build (non-Windows)
         shell: bash
         run: scripts/build.sh ${{ matrix.solver }} ${{ matrix.arch }}
