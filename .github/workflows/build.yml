@@ -74,9 +74,7 @@ jobs:
 
       - name: Build (Windows)
         shell: msys2 {0}
-        run: |
-          export CXXFLAGS="-Wno-error=dangling-reference -Wno-error=array-bounds"
-          scripts/build.sh ${{ matrix.solver }} ${{ matrix.arch }}
+        run: scripts/build.sh ${{ matrix.solver }} ${{ matrix.arch }}
         if: runner.os == 'Windows'
 
       - name: Upload artifact
