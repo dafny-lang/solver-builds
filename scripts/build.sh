@@ -31,10 +31,18 @@ pushd repos/$SOLVER
 
 # Apply Z3 source code fixes
 if [[ "$SOLVER" == "z3-4.12.1" || "$SOLVER" == "z3-4.12.6" ]]; then
+    # Fix typo in column_info.h
     COLUMN_INFO_FILE="src/math/lp/column_info.h"
     if [[ -f "$COLUMN_INFO_FILE" ]]; then
         echo "Fixing typo in $COLUMN_INFO_FILE"
         sed -i.bak 's/c\.m_low_bound/c.m_lower_bound/g' "$COLUMN_INFO_FILE"
+    fi
+    
+    # Fix typo in static_matrix.h
+    STATIC_MATRIX_FILE="src/math/lp/static_matrix.h"
+    if [[ -f "$STATIC_MATRIX_FILE" ]]; then
+        echo "Fixing typo in $STATIC_MATRIX_FILE"
+        sed -i.bak 's/v\.m_matrix\.get(/v.m_matrix.get_elem(/g' "$STATIC_MATRIX_FILE"
     fi
 fi
 
