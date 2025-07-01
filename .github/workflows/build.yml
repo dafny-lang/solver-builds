@@ -67,11 +67,6 @@ jobs:
             tar
         if: runner.os == 'Windows'
 
-      - name: Set CXX (ubuntu-20.04)
-        run: |
-          echo "CXX=g++-10" >> $GITHUB_ENV
-        if: matrix.os == 'ubuntu-20.04'
-
       - name: Build (non-Windows)
         shell: bash
         run: scripts/build.sh ${{ matrix.solver }} ${{ matrix.arch }}
