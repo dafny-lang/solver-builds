@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04,
+        os: [ubuntu-22.04,
              macos-13, macos-14, macos-15,
              windows-2022]
         solver: [z3-4.12.1, z3-4.12.6, z3-4.14.1]
