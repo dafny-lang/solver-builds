@@ -45,6 +45,13 @@ if [[ "$SOLVER" == "z3-4.12.1" ]]; then
         sed -i.bak 's/v\.m_matrix\.get(/v.m_matrix.get_elem(/g' "$STATIC_MATRIX_FILE"
     fi
     
+    # Fix typo in static_matrix_def.h
+    STATIC_MATRIX_DEF_FILE="src/math/lp/static_matrix_def.h"
+    if [[ -f "$STATIC_MATRIX_DEF_FILE" ]]; then
+        echo "Fixing typo in $STATIC_MATRIX_DEF_FILE"
+        sed -i.bak 's/A\.get_value_of_column_cell(col)/A.get_val(col)/g' "$STATIC_MATRIX_DEF_FILE"
+    fi
+    
     # Fix tail_matrix.h debug-only get_elem issue
     TAIL_MATRIX_FILE="src/math/lp/tail_matrix.h"
     if [[ -f "$TAIL_MATRIX_FILE" ]]; then
