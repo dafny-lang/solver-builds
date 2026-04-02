@@ -55,6 +55,12 @@ jobs:
           - os: macos-26
             arch: arm64
             solver: z3-4.15.4
+          - os: windows-11-arm
+            arch: arm64
+            solver: z3-4.14.1
+          - os: windows-11-arm
+            arch: arm64
+            solver: z3-4.15.4
     steps:
       - name: Check out
         uses: actions/checkout@v4
@@ -62,7 +68,7 @@ jobs:
           submodules: true
           fetch-depth: 0
 
-      - name: Install dependencies (Windows)
+      - name: Install dependencies (Windows x64)
         uses: msys2/setup-msys2@v2
         with:
           update: true
@@ -74,17 +80,40 @@ jobs:
             mingw-w64-x86_64-ninja
             python
             tar
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && matrix.arch == 'x64'
+
+      - name: Setup Python (Windows ARM64)
+        if: runner.os == 'Windows' && matrix.arch == 'arm64'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
       - name: Build (non-Windows)
         shell: bash
         run: scripts/build.sh ${{ matrix.solver }} ${{ matrix.arch }}
         if: runner.os != 'Windows'
 
-      - name: Build (Windows)
+      - name: Build (Windows x64)
         shell: msys2 {0}
         run: scripts/build.sh ${{ matrix.solver }} ${{ matrix.arch }}
-        if: runner.os == 'Windows'
+        if: runner.os == 'Windows' && matrix.arch == 'x64'
+
+      - name: Build (Windows ARM64)
+        if: runner.os == 'Windows' && matrix.arch == 'arm64'
+        shell: cmd
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" arm64
+          cd repos\${{ matrix.solver }}
+          mkdir build
+          cd build
+          cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DZ3_BUILD_LIBZ3_SHARED=OFF -DZ3_USE_LIB_GMP=OFF -DZ3_BUILD_DOTNET_BINDINGS=OFF -DZ3_BUILD_JAVA_BINDINGS=OFF -DZ3_BUILD_PYTHON_BINDINGS=OFF -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded ..
+          ninja shell
+          mkdir ..\..\..\bin
+          copy z3.exe ..\..\..\bin\${{ matrix.solver }}.exe
+
+      - name: Verify (Windows ARM64)
+        if: runner.os == 'Windows' && matrix.arch == 'arm64'
+        run: bin\${{ matrix.solver }}.exe --version
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

@@ -9,4 +9,4 @@
 	url = https://github.com/Z3Prover/z3.git
 [submodule "repos/z3-4.15.4"]
 	path = repos/z3-4.15.4
-	url = git@github.com:Z3Prover/z3.git
+	url = https://github.com/Z3Prover/z3.git
