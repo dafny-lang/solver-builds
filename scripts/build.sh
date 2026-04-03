@@ -85,15 +85,29 @@ if [[ "$SOLVER" == "z3-4.12.6" ]]; then
     fi
 fi
 
-if [[ "$RUNNER_OS" == 'Windows' ]] ; then
-  sed -i.bak -e 's/STATIC_BIN=False/STATIC_BIN=True/' scripts/mk_util.py
+# ARM64 Windows: use cmake + ninja (mk_make.py --arm64 is Darwin-only)
+if [[ "$RUNNER_OS" == 'Windows' && "$ARCH" == 'arm64' ]] ; then
+  mkdir -p build && cd build
+  cmake -G Ninja \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DZ3_BUILD_LIBZ3_SHARED=OFF \
+    -DZ3_USE_LIB_GMP=OFF \
+    -DZ3_BUILD_DOTNET_BINDINGS=OFF \
+    -DZ3_BUILD_JAVA_BINDINGS=OFF \
+    -DZ3_BUILD_PYTHON_BINDINGS=OFF \
+    -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded \
+    ..
+  ninja shell
+  cp z3$EXECUTABLE_EXT $BIN/$SOLVER$EXECUTABLE_EXT
+else
+  if [[ "$RUNNER_OS" == 'Windows' ]] ; then
+    sed -i.bak -e 's/STATIC_BIN=False/STATIC_BIN=True/' scripts/mk_util.py
+  fi
+  python scripts/mk_make.py $ARCH_OPT
+  (cd build && make -j4 && cp z3$EXECUTABLE_EXT $BIN/$SOLVER$EXECUTABLE_EXT)
+  strip $BIN/$SOLVER$EXECUTABLE_EXT
 fi
-python scripts/mk_make.py $ARCH_OPT
-(cd build && make -j4 && cp z3$EXECUTABLE_EXT $BIN/$SOLVER$EXECUTABLE_EXT)
-strip $BIN/$SOLVER$EXECUTABLE_EXT
 
-if [[ "$ARCH" == 'x64' ]] ; then
-  $BIN/$SOLVER$EXECUTABLE_EXT --version
-fi
+$BIN/$SOLVER$EXECUTABLE_EXT --version
 
 popd
